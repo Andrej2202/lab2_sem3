@@ -18,7 +18,7 @@ public:
 
 private slots:
     void onExportCsv();
-    void onPlot();
+    //void onPlot();
 
 private:
     void setupUI();

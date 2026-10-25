@@ -3,6 +3,7 @@
 #include "Pair.hpp"
 #include <iostream>
 #include <cassert>
+#include <limits>
 
 void test_binary_tree() {
     std::cout << "=== Тесты BinaryTree ===\n";
@@ -53,7 +54,7 @@ void test_binary_tree() {
 
         auto range = tree.GetRange(
             Pair<int, int>(30, 0),
-            Pair<int, int>(60, std::numeric_limits<size_t>::max())
+            Pair<int, int>(60, std::numeric_limits<int>::max())
         );
 
         assert(range->GetLength() == 4);
@@ -73,7 +74,7 @@ void test_binary_tree() {
 
         auto range = tree.GetRange(
             Pair<int, int>(50, 0),
-            Pair<int, int>(100, std::numeric_limits<size_t>::max())
+            Pair<int, int>(100, std::numeric_limits<int>::max())
         );
         assert(range->GetLength() == 0);
         delete range;

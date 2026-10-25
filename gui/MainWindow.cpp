@@ -209,6 +209,15 @@ void MainWindow::onLoadCSV()
 
     bool headerSkipped = false;
     int count = 0;
+    int totalLines = 0;
+
+    while (!in.atEnd()) {
+        in.readLine();
+        totalLines++;
+    }
+    in.seek(0);
+
+    tableView_->setUpdatesEnabled(false);
 
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -247,14 +256,36 @@ void MainWindow::onLoadCSV()
 
                 system_->AddStudent(student);
                 count++;
+
+                if (count % 1000 == 0) {
+                    int progress = (count * 100) / (totalLines > 0 ? totalLines : 1);
+                    statusLabel_->setText(
+                        QString("Загрузка... %1 / ~%2 (%3%)")
+                            .arg(count)
+                            .arg(totalLines)
+                            .arg(progress));
+                    
+                    QApplication::processEvents();
+                }
             } catch (...) {
             }
         }
     }
 
     file.close();
+    
+    tableView_->setUpdatesEnabled(true);
     statusLabel_->setText(QString("Загружено %1 записей").arg(count));
-    onShowAll();
+    
+    if (count > 1000) {
+        QMessageBox::information(this, "Готово",
+            QString("Загружено %1 записей.\n\n"
+                    "Таблица не обновлена автоматически (слишком много записей).\n"
+                    "Используйте поиск для просмотра данных.")
+                .arg(count));
+    } else {
+        onShowAll();
+    }
 }
 
 void MainWindow::onAddStudent()

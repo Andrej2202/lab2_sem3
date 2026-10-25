@@ -43,14 +43,14 @@ void BenchmarkDialog::setupUI()
     btnExportCsv_ = new QPushButton("Экспорт в CSV");
     connect(btnExportCsv_, &QPushButton::clicked, this, &BenchmarkDialog::onExportCsv);
 
-    btnPlot_ = new QPushButton("Построить график");
-    connect(btnPlot_, &QPushButton::clicked, this, &BenchmarkDialog::onPlot);
+    //btnPlot_ = new QPushButton("Построить график");
+    //connect(btnPlot_, &QPushButton::clicked, this, &BenchmarkDialog::onPlot);
 
     btnClose_ = new QPushButton("Закрыть");
     connect(btnClose_, &QPushButton::clicked, this, &QDialog::accept);
 
     buttonsLayout->addWidget(btnExportCsv_);
-    buttonsLayout->addWidget(btnPlot_);
+    //buttonsLayout->addWidget(btnPlot_);
     buttonsLayout->addStretch();
     buttonsLayout->addWidget(btnClose_);
 
@@ -102,21 +102,21 @@ void BenchmarkDialog::onExportCsv()
 }
 
 
-void BenchmarkDialog::onPlot()
-{
-    if (model_->rowCount() == 0) {
-        QMessageBox::information(this, "График", "Нет данных для построения графика.");
-        return;
-    }
+// void BenchmarkDialog::onPlot()
+// {
+//     if (model_->rowCount() == 0) {
+//         QMessageBox::information(this, "График", "Нет данных для построения графика.");
+//         return;
+//     }
 
-    QMessageBox::information(
-        this,
-        "Построение графика",
-        "Модуль Qt Charts не подключён к проекту.\n\n"
-        "Воспользуйтесь кнопкой \"Экспорт в CSV\" и постройте график "
-        "в Excel, LibreOffice Calc или Python (matplotlib).\n\n"
-        "Для подключения графика в самом приложении:\n"
-        "1. Добавьте в .pro файл: QT += charts\n"
-        "2. Пересоберите проект.\n"
-        "3. Реализуйте построение графика в этом слоте.");
-}
+//     QMessageBox::information(
+//         this,
+//         "Построение графика",
+//         "Модуль Qt Charts не подключён к проекту.\n\n"
+//         "Воспользуйтесь кнопкой \"Экспорт в CSV\" и постройте график "
+//         "в Excel, LibreOffice Calc или Python (matplotlib).\n\n"
+//         "Для подключения графика в самом приложении:\n"
+//         "1. Добавьте в .pro файл: QT += charts\n"
+//         "2. Пересоберите проект.\n"
+//         "3. Реализуйте построение графика в этом слоте.");
+// }
