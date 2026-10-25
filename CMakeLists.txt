@@ -23,7 +23,6 @@ include_directories(
 add_executable(student_system_gui
     src/main_gui.cpp
     src/Student.cpp
-    src/FileStorage.cpp
     src/IndexSystem.cpp
     gui/MainWindow.cpp
     gui/MainWindow.hpp          
@@ -52,7 +51,6 @@ add_executable(test_system
     tests/test_file_storage.cpp
     tests/test_index_system.cpp
     src/Student.cpp
-    src/FileStorage.cpp
     src/IndexSystem.cpp
 )
 

@@ -1,56 +1,58 @@
 #pragma once
-
 #include "base/Sequence.hpp"
 #include "base/MutableArraySequence.hpp"
 #include "base/Exceptions.hpp"
-#include <vector>
+#include "Pair.hpp"
+#include <concepts>
 
 template <typename T>
+concept Comparable = requires(T a, T b) {
+    { a < b } -> std::convertible_to<bool>;
+};
+
+template <Comparable TKey, typename TValue>
 class BinaryTree {
 private:
+    
     struct Node {
-        T data;
+        Pair<TKey, TValue> data;
         Node* left;
         Node* right;
-        Node(const T& val) : data(val), left(nullptr), right(nullptr) {}
+        Node(const Pair<TKey, TValue>& val) : data(val), left(nullptr), right(nullptr) {}
     };
-
+    
     Node* root_;
     size_t size_;
-
-    void InsertRecursive(Node*& node, const T& value);
+    
+    void InsertRecursive(Node*& node, const Pair<TKey, TValue>& value);
     void DestroyRecursive(Node* node);
-    void GetRangeRecursive(Node* node, const T& min, const T& max, MutableArraySequence<T>* result) const;
-
+    void GetRangeRecursive(Node* node, const Pair<TKey, TValue>& min, const Pair<TKey, TValue>& max, 
+                          MutableArraySequence<Pair<TKey, TValue>>* result) const;
+    
 public:
     BinaryTree();
     ~BinaryTree();
-
     BinaryTree(const BinaryTree&) = delete;
     BinaryTree& operator=(const BinaryTree&) = delete;
-
-    void Insert(const T& value);
+    
+    void Insert(const Pair<TKey, TValue>& value);
     size_t GetSize() const;
     bool IsEmpty() const;
-
-    Sequence<T>* GetRange(const T& min, const T& max) const;
-
+    Sequence<Pair<TKey, TValue>>* GetRange(const Pair<TKey, TValue>& min, const Pair<TKey, TValue>& max) const;
+    
     class Iterator {
     private:
-        std::vector<Node*> stack_; 
-
+        MutableArraySequence<Node*> stack_;
         void pushLeftBranch(Node* node);
-
     public:
         Iterator();
         Iterator(Node* root);
-
-        T operator*() const;
+        Pair<TKey, TValue> operator*() const;
         Iterator& operator++();
         bool operator!=(const Iterator& other) const;
         bool operator==(const Iterator& other) const;
     };
-
+    
     Iterator begin() const;
     Iterator end() const;
 };

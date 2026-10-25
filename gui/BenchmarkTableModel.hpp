@@ -5,11 +5,14 @@
 
 struct BenchmarkRow {
     QString dataType;
-    int dataSize;
-    double treeBuildTime;
-    double sortedBuildTime;
-    double treeSearchTime;
-    double sortedSearchTime;
+    int     dataSize = 0;
+    
+    double  treeBuildTime_ms   = 0.0;
+    double  sortedBuildTime_ms = 0.0;
+    
+    double  treeSearchTime_ms         = 0.0;
+    double  sortedSearchTimeMid_ms    = 0.0;
+    double  sortedSearchTimeGolden_ms = 0.0;
 };
 
 class BenchmarkTableModel : public QAbstractTableModel {
@@ -23,6 +26,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void setRows(const QVector<BenchmarkRow> &rows);
+    void clear();
+
+    bool exportToCsv(const QString &filePath) const;
+    const QVector<BenchmarkRow>& rows() const { return m_rows; }
 
 private:
     QVector<BenchmarkRow> m_rows;

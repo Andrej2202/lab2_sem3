@@ -28,6 +28,8 @@ public:
         }
         this->data_->Set(index, item);
     }
+
+    void RemoveLast();
 };
 
 template<class T>
@@ -45,4 +47,15 @@ Sequence<T>* MutableArraySequence<T>::GetSubsequence(size_t startIndex, size_t e
         buffer.Set(i, this->data_->Get(startIndex + i));
     } 
     return new MutableArraySequence<T>(std::move(buffer));
+}
+
+template <typename T>
+void MutableArraySequence<T>::RemoveLast() {
+    size_t current_size = this->data_->GetSize();
+    
+    if (current_size == 0) {
+        throw InvalidArgumentException("MutableArraySequence", "RemoveLast", 
+            "Попытка удалить элемент из пустой последовательности");
+    }
+    this->data_->Resize(current_size - 1);
 }

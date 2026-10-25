@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QTableView>
+#include <QComboBox>
+
 #include "IndexSystem.hpp"
 #include "StudentTableModel.hpp"
 #include "BenchmarkDialog.hpp"
@@ -30,15 +32,21 @@ private:
     void clearTable();
 
     IndexSystem* system_ = nullptr;
+
     QTableView* tableView_ = nullptr;
     StudentTableModel* model_ = nullptr;
-    
+
     QLineEdit* editFirstName_ = nullptr;
     QLineEdit* editLastName_ = nullptr;
     QLineEdit* editYear_ = nullptr;
     QLineEdit* editGroup_ = nullptr;
+
     QLineEdit* editSearchYear_ = nullptr;
     QLineEdit* editMinYear_ = nullptr;
     QLineEdit* editMaxYear_ = nullptr;
+
+    QComboBox* comboStrategy_ = nullptr;
+    QComboBox* comboIndexType_ = nullptr;
+
     QLabel* statusLabel_ = nullptr;
 };

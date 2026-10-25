@@ -1,10 +1,12 @@
 template <typename T>
-SortedSequence<T>::SortedSequence(DivisionStrategy strategy) 
-    : data_(new MutableArraySequence<T>()), strategy_(strategy) {}
+SortedSequence<T>::SortedSequence(SplitFunc splitFunc) 
+    : data_(new MutableArraySequence<T>()), 
+      splitFunc_(splitFunc ? splitFunc : DefaultSplitFunc()) {}
 
 template <typename T>
 SortedSequence<T>::SortedSequence(const SortedSequence<T>& other) 
-    : data_(new MutableArraySequence<T>(*other.data_)), strategy_(other.strategy_) {}
+    : data_(new MutableArraySequence<T>(*other.data_)), 
+      splitFunc_(other.splitFunc_) {}
 
 template <typename T>
 SortedSequence<T>::~SortedSequence() {
@@ -16,15 +18,16 @@ SortedSequence<T>& SortedSequence<T>::operator=(const SortedSequence<T>& other) 
     if (this != &other) {
         delete data_;
         data_ = new MutableArraySequence<T>(*other.data_);
-        strategy_ = other.strategy_;
+        splitFunc_ = other.splitFunc_;
     }
     return *this;
 }
 
-
 template <typename T>
-void SortedSequence<T>::SetDivisionStrategy(DivisionStrategy strategy) {
-    strategy_ = strategy;
+void SortedSequence<T>::SetSplitFunction(SplitFunc func) {
+    if (func) {
+        splitFunc_ = func;
+    }
 }
 
 template <typename T>
@@ -33,12 +36,7 @@ size_t SortedSequence<T>::BinarySearch(const T& item) const {
     size_t right = data_->GetLength();
     
     while (left < right) {
-        size_t mid;
-        if (strategy_ == DivisionStrategy::HALF) {
-            mid = left + (right - left) / 2;
-        } else {
-            mid = left + static_cast<size_t>((right - left) * 0.382);
-        }
+        size_t mid = splitFunc_(left, right);
 
         T midVal = data_->Get(mid);
         if (midVal < item) {
@@ -58,7 +56,7 @@ size_t SortedSequence<T>::FindInsertPosition(const T& item) const {
     right--;
 
     while (left <= right) {
-        size_t mid = left + (right - left) / 2;
+        size_t mid = splitFunc_(left, right);
         T midVal = data_->Get(mid);
         if (midVal < item) {
             left = mid + 1;
@@ -79,8 +77,10 @@ void SortedSequence<T>::Add(const T& item) {
 template <typename T>
 int SortedSequence<T>::IndexOf(const T& item) const {
     size_t index = BinarySearch(item);
-    if (index == SIZE_MAX) return -1;
-    return static_cast<int>(index);
+    if (index < data_->GetLength() && data_->Get(index) == item) {
+        return static_cast<int>(index);
+    }
+    return -1;
 }
 
 template <typename T>
@@ -150,7 +150,7 @@ void SortedSequence<T>::Set(size_t index, T data) {
 
 template <typename T>
 Sequence<T>* SortedSequence<T>::CreateEmpty() const {
-    return new SortedSequence<T>(strategy_);
+    return new SortedSequence<T>(splitFunc_);
 }
 
 template <typename T>
